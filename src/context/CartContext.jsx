@@ -30,10 +30,10 @@ export function CartProvider({ children }) {
   }, [items])
 
   // (opcional) sincroniza entre pestañas
-  useEffect(() => {
+    useEffect(() => {
     const onStorage = (e) => {
-      if (e.key === STORAGE_KEY) {
-        setItems(loadInitialCart())
+      if (e.key === STORAGE_KEY && e.newValue) {
+        try { setItems(JSON.parse(e.newValue) || []) } catch {}
       }
     }
     window.addEventListener('storage', onStorage)
@@ -42,12 +42,11 @@ export function CartProvider({ children }) {
 
   const addItem = (product, qty) => {
     setItems(curr => {
-      const i = curr.findIndex(p => p.id === product.id)
-      if (i !== -1) {
-        const copy = [...curr]
-        const nextQty = Math.min(copy[i].quantity + qty, product.stock)
-        copy[i] = { ...copy[i], quantity: nextQty }
-        return copy
+      const found = curr.find(p => p.id === product.id)
+      if (found) {
+        return curr.map(p => p.id === product.id
+          ? { ...p, quantity: Math.min(p.quantity + qty, p.stock) }
+          : p)
       }
       // Guardamos solo lo necesario (id, title, price, thumbnail, stock, quantity)
       const { id, title, price, thumbnail, stock } = product

@@ -3,12 +3,12 @@
 SPA de e-commerce construida con **React + Vite**, **React Router**, **Context API** para carrito y **Firebase Firestore** para catálogo y órdenes.
 
 ## Stack
-- React 18, Vite
+- React + Vite
 - React Router DOM
 - Context API
 - Firebase (Firestore)
 - SweetAlert2
-- CSS modular (estilos base)
+- CSS
 
 ## Funcionalidad
 - Listado dinámico desde Firestore (`products`)

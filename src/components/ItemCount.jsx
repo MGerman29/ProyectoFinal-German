@@ -7,8 +7,8 @@ export default function ItemCount({ stock = 0, initial = 1, onAdd }) {
     const canInc = count < stock
 
 
-    const inc = () => canInc && setCount(c => c + 1)
-    const dec = () => canDec && setCount(c => c - 1)
+    const inc = () => setCount(c => Math.min(c + 1, stock))
+    const dec = () => setCount(c => Math.max(c - 1, 1))
     const add = () => stock > 0 && onAdd?.(count)
 
 

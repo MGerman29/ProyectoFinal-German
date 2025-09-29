@@ -20,8 +20,9 @@ export const db = getFirestore(app)
 
 export async function fetchProducts(categoryId) {
   const ref = collection(db, 'products')
-  const q = categoryId ? query(ref, where('category', '==', categoryId)) : ref
-  const snap = await getDocs(q)
+  const snap = categoryId
+    ? await getDocs(query(ref, where('category', '==', categoryId)))
+    : await getDocs(ref)
   return snap.docs.map(d => ({ id: d.id, ...d.data() }))
 }
 

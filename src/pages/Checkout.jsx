@@ -4,9 +4,9 @@ import Swal from 'sweetalert2'
 import { useCart } from '../context/CartContext'
 import { createOrder } from '../services/firebase'
 
-export default function Checkout(){
+export default function Checkout() {
   const { items, totalPrice, clear } = useCart()
-  const [form, setForm] = useState({ name:'', email:'', phone:'' })
+  const [form, setForm] = useState({ name: '', email: '', phone: '' })
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
@@ -20,7 +20,12 @@ export default function Checkout(){
     try {
       const order = {
         buyer: form,
-        items: items.map(({id,title,price,quantity}) => ({ productId:id, title, price, quantity })),
+        items: items.map(({ id, title, price, quantity }) => ({
+          productId: id,
+          title,
+          price,
+          quantity,
+        })),
         total: totalPrice
       }
       const id = await createOrder(order)
@@ -36,7 +41,7 @@ export default function Checkout(){
             <hr/>
             <div style="max-height:140px;overflow:auto">
               ${order.items.map(i => `
-                <div>• ${i.title} x${i.quantity} — $${(i.price*i.quantity).toFixed(2)}</div>
+                <div>• ${i.title} x${i.quantity} — $${(i.price * i.quantity).toFixed(2)}</div>
               `).join('')}
             </div>
           </div>
@@ -59,31 +64,30 @@ export default function Checkout(){
         heightAuto: true,
         allowOutsideClick: false,
         didOpen: () => {
-          // select text si querés
         }
       }).then(async (res) => {
         if (res.isDenied) {
           try {
             await navigator.clipboard.writeText(id)
-            await Swal.fire({ toast:true, position:'top-end', icon:'success', title:'ID copiado', showConfirmButton:false, timer:1400 })
-          } catch {}
+            await Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'ID copiado', showConfirmButton: false, timer: 1400 })
+          } catch { }
         }
         navigate('/') // redirige siempre al cerrar
       })
 
     } catch (err) {
-      await Swal.fire({ title: 'Ups', text: 'No pudimos procesar tu compra', icon: 'error', confirmButtonText:'Entendido' })
+      await Swal.fire({ title: 'Ups', text: 'No pudimos procesar tu compra', icon: 'error', confirmButtonText: 'Entendido' })
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <form onSubmit={submit} className="card" style={{padding:16}}>
+    <form onSubmit={submit} className="card" style={{ padding: 16 }}>
       <h2>Checkout</h2>
       <div className="row">
-        <input name="name"  placeholder="Nombre"   value={form.name}  onChange={onChange} required />
-        <input name="email" placeholder="Email"    value={form.email} onChange={onChange} required />
+        <input name="name" placeholder="Nombre" value={form.name} onChange={onChange} required />
+        <input name="email" placeholder="Email" value={form.email} onChange={onChange} required />
         <input name="phone" placeholder="Teléfono" value={form.phone} onChange={onChange} required />
       </div>
       <button className="button" disabled={!items.length || loading}>

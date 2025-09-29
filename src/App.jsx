@@ -5,6 +5,7 @@ import Category from './pages/Category'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
 import ItemDetailPage from "./pages/ItemDetailPage"
+import NotFound from './pages/NotFound'
 
 export default function App() {
   return (
@@ -17,8 +18,10 @@ export default function App() {
           <Route path="/item/:id" element={<ItemDetailPage />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     </div>
   )
 }
+
